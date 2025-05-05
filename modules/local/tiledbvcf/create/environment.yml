@@ -1,0 +1,4 @@
+channels:
+  - tiledb
+dependencies:
+  - tiledb::tiledbvcf-py>=0.34.2
