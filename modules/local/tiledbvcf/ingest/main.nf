@@ -2,7 +2,7 @@ process TILEDBVCF_INGEST {
     tag "$meta.id"
     label 'process_medium'
 
-    conda "tiledb::tiledbvcf-py>=0.34.2"
+    conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'docker.io/tiledb/tiledbvcf-cli:latest' :
         'docker.io/tiledb/tiledbvcf-cli:latest' }"
