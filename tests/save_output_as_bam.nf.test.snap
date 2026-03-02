@@ -1,14 +1,23 @@
 {
-    "Run with profile test | --save_output_as_bam | skip QC/recal/md": {
+    "-profile test --save_output_as_bam skip QC/recal/md": {
         "content": [
             10,
             {
                 "BAM_TO_CRAM_MAPPING": {
                     "samtools": 1.21
                 },
+                "BWAMEM1_INDEX": {
+                    "bwa": "0.7.18-r1243-dirty"
+                },
                 "BWAMEM1_MEM": {
                     "bwa": "0.7.18-r1243-dirty",
-                    "samtools": 1.2
+                    "samtools": 1.21
+                },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.3.0"
+                },
+                "GATK4_INTERVALLISTTOBED": {
+                    "gatk4": "4.6.1.0"
                 },
                 "INDEX_MERGE_BAM": {
                     "samtools": 1.21
@@ -16,8 +25,11 @@
                 "MERGE_BAM": {
                     "samtools": 1.21
                 },
-                "Workflow": {
-                    "nf-core/sarek": "v3.5.1"
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "tabix": 1.21
                 }
             },
             [
@@ -32,20 +44,20 @@
                 "preprocessing/mapped/test/test.sorted.bam.bai",
                 "reference"
             ],
+            "No stable content",
             [
-
+                "test.sorted.bam:md5,5534c350547fd253f0f2b9450362bed"
             ],
+            "No CRAM files",
+            "No VCF files",
             [
-                [
-                    "test.sorted.bam",
-                    "5534c350547fd253f0f2b9450362bed"
-                ]
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.09.0"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-10-08T11:11:44.283548"
+        "timestamp": "2025-12-15T21:28:27.476637665"
     }
 }
