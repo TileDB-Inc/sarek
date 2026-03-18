@@ -48,6 +48,7 @@ include { POST_VARIANTCALLING                               } from '../../subwor
 // TileDB-VCF
 include { TILEDBVCF_CREATE_DATASET                         } from '../../subworkflows/local/tiledbvcf_create/main'
 include { TILEDBVCF_INGEST_VCF                             } from '../../subworkflows/local/tiledbvcf_ingest/main'
+include { TILEDBCLIENT_INGEST_VCF                          } from '../../subworkflows/local/tiledbclient_ingest/main'
 
 // QC on VCF files
 include { VCF_QC_BCFTOOLS_VCFTOOLS                          } from '../../subworkflows/local/vcf_qc_bcftools_vcftools'
@@ -551,24 +552,20 @@ workflow SAREK {
 
         // Run TileDB-VCF ingest workflow on vcfs in vcf_to_annotate
         if (params.tiledb_ingest_vcfs) {
-            TILEDBVCF_INGEST_VCF(
-                vcf_to_annotate.map{meta, vcf -> [ meta + [ file_name: vcf.baseName ], vcf ] },
-                params.tiledb_dataset_name
-            )
-
-            // Mix versions
-            versions = versions.mix(TILEDBVCF_INGEST_VCF.out.versions)
+            if (params.tiledb_ingestor == 'tiledb-client') {
+                TILEDBCLIENT_INGEST_VCF(
+                    vcf_to_annotate.map{meta, vcf -> [ meta + [ file_name: vcf.baseName ], vcf ] },
+                    params.tiledb_dataset_name
+                )
+                versions = versions.mix(TILEDBCLIENT_INGEST_VCF.out.versions)
+            } else {
+                TILEDBVCF_INGEST_VCF(
+                    vcf_to_annotate.map{meta, vcf -> [ meta + [ file_name: vcf.baseName ], vcf ] },
+                    params.tiledb_dataset_name
+                )
+                versions = versions.mix(TILEDBVCF_INGEST_VCF.out.versions)
+            }
         }
-
-        // QC
-        VCF_QC_BCFTOOLS_VCFTOOLS(vcf_to_annotate, intervals_bed_combined)
-
-        reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.bcftools_stats.collect{ meta, stats -> [ stats ] })
-        reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_tstv_counts.collect{ meta, counts -> [ counts ] })
-        reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_tstv_qual.collect{ meta, qual -> [ qual ] })
-        reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_filter_summary.collect{ meta, summary -> [ summary ] })
-        reports = reports.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.out_indexcov.collect{ meta, indexcov -> indexcov.flatten() })
-        reports = reports.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.out_indexcov.collect{ meta, indexcov -> indexcov.flatten() })
 
         CHANNEL_VARIANT_CALLING_CREATE_CSV(vcf_to_annotate, params.outdir)
 

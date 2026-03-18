@@ -866,11 +866,21 @@
                 },
                 "tiledb_dataset_name": {
                     "type": "string",
-                    "description": "Name of the TileDB-VCF dataset."
+                    "description": "Name or URI of the TileDB-VCF dataset. Supports tiledb:// and s3:// paths."
                 },
                 "tiledb_ingest_vcfs": {
                     "type": "boolean",
                     "description": "Ingest the VCF files into the TileDB-VCF dataset."
+                },
+                "tiledb_ingestor": {
+                    "type": "string",
+                    "description": "Ingestor to use for VCF ingestion into TileDB.",
+                    "enum": ["tiledbvcf", "tiledb-client"],
+                    "default": "tiledbvcf"
+                },
+                "tiledb_acn": {
+                    "type": "string",
+                    "description": "ACN (Access Credentials Name) string for tiledb-client ingest."
                 }
             }
         },

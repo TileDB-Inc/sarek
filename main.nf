@@ -112,7 +112,7 @@ chr_files = params.chr_files ? Channel.fromPath(params.chr_files).collect() : []
 
 // Adding resources for snpEff
 snpeff_cache = params.snpeff_cache ? Channel.fromPath(params.snpeff_cache).collect() : []
-snpeff_db    = params.snpeff_db                                                       : Channel.empty()
+snpeff_db    = params.snpeff_db    ? Channel.value(params.snpeff_db)                    : Channel.empty()
 vep_cache    = params.vep_cache    ? Channel.fromPath(params.vep_cache).collect()    : []
 
 // snpeff_genome

@@ -4,8 +4,8 @@ process TILEDBVCF_INGEST {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'docker.io/tiledb/tiledbvcf-cli:latest' :
-        'docker.io/tiledb/tiledbvcf-cli:latest' }"
+        'docker.io/tiledbenterprise/carrara-udf-genomics-py312:0.2.0' :
+        'docker.io/tiledbenterprise/carrara-udf-genomics-py312:0.2.0' }"
 
     input:
     tuple val(meta), path(vcf_file)
